@@ -10,13 +10,13 @@ Cabin Sounds and Ambience; *Hear the electronics and passengers when you switch 
 Reverse Thrust Loudness; *The reverse thrust now has its own sound!*<br>
 Alarms, GPWS, and TCAS; *Radioaltimiter callouts and alarms from 777 overhaul, TCAS modified from the airbus counterpart.* <br>
 Better Rolling Sounds; *The default rolling sound has been replaced with a better one.*<br>
+Gear retraction sounds; *The Iconic 737 gear retraction whirr is in the game now!*<br>
+Ground effect sounds; *When you get close to the ground, you will hear a whooshing sound as the air resonates under the plane*<br>
+Dynamic Touchdown sounds; *Ryanair pilots better prepare their ears, because hard landings wont sound quite the same as soft ones.*<br>
+Stall Shaking/Buffeting; *A camera effect that shakes the camera in the cockpit when you are at high aoa.*<br>
+Rain Sounds; *Hear the rain dynamically respond to parameters such as speed and precipitation rate!*<br>
 
-**Planned Features:**<br>
-Gear retraction sounds<br>
-Flaps and spoilers drag sounds<br>
-Ground effect sounds<br>
-Dynamic Touchdown sounds<br>
-Stall Shaking/Buffeting<br>
+
 
 
 **Terms:**<br>
