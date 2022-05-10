@@ -7,7 +7,120 @@ geofs.animation.values.engSoundMultR = null;
 geofs.animation.values.engSoundFar = null;
 geofs.animation.values.reverseThrustVol = null;
 geofs.animation.values.cabinAmb = null;
+geofs.animation.values.groundSound = null;
+geofs.animation.values.gearThud = null;
+geofs.animation.values.overspeed = null;
+geofs.animation.values.rainVol = null;
+geofs.animation.values.tdSoft = null;
+geofs.animation.values.tdHard = null;
+geofs.animation.values.spoilersSound = null;
+geofs.animation.values.shake = null;
 
+//ground effect sound sensing
+
+function getGroundSound() {
+  if (geofs.animation.values.haglFeet < 20) {
+        geofs.animation.values.groundSound = (-(geofs.animation.values.haglFeet) + 20) * (geofs.animation.values.kias / 10) / 500;
+  }
+  else {
+    geofs.animation.values.groundSound = 0;
+  }
+}
+
+function getGearThud() {
+  if (geofs.animation.values.gearPosition != 0 && geofs.animation.values.gearPosition != 1) {
+    geofs.animation.values.gearThud = 1;
+  }
+  else {
+    geofs.animation.values.gearThud = 0;
+  }
+}
+
+function getSpoilerSound() {
+  if (geofs.animation.values.airbrakesPosition != 0) {
+    geofs.animation.values.spoilersSound = geofs.animation.values.airbrakesPosition * (geofs.animation.values.kias / 10)
+  }
+  else {
+    geofs.animation.values.spoilersSound = 0;
+  }
+}
+
+function getShake() {
+  if (geofs.animation.values.tdHard == 1 || geofs.animation.values.tdSoft == 1) {
+    geofs.animation.values.shake = Math.random() * (geofs.animation.values.climbrate / 10)
+      return;
+  }
+  if (geofs.animation.values.groundContact == 1) {
+    geofs.animation.values.shake = geofs.animation.values.kias * Math.random();
+  }
+  else {
+    geofs.animation.values.shake = geofs.animation.values.aoa * Math.random();
+  }
+
+}
+
+function overspeed() {
+  if (geofs.camera.currentModeName == "cockpit") {
+  if (geofs.animation.values.kias >= 300) {
+    geofs.animation.values.overspeed = 1;
+  }
+  else {
+    geofs.animation.values.overspeed = 0;
+    }
+  }
+  else {
+    geofs.animation.values.overspeed = 0;
+  }
+}
+
+let lastGC = 0;
+
+function getTouch() {
+  if (lastGC != geofs.animation.values.groundContact) {
+    if (Math.abs(geofs.animation.values.climbrate) >= 1000) {
+      geofs.animation.values.tdSoft = 0;
+      geofs.animation.values.tdHard = 1;
+      setTimeout(function(){
+        geofs.animation.values.tdHard = 0;
+      }, 1000)
+    }
+    else {
+      geofs.animation.values.tdSoft = 1;
+      geofs.animation.values.tdHard = 0;
+      setTimeout(function(){
+        geofs.animation.values.tdSoft = 0;
+      }, 1000)
+    }
+  }
+  lastGC = geofs.animation.values.groundContact;
+};
+
+function doShake() {
+
+  getShake() 
+  geofs.camera.translate(0.0001 * geofs.animation.values.shake,0.0001 * geofs.animation.values.shake,0.0001 * geofs.animation.values.shake)
+  setTimeout(function(){
+    geofs.camera.translate(-0.0001 * geofs.animation.values.shake,-0.0001 * geofs.animation.values.shake,-0.0001 * geofs.animation.values.shake)
+  },1)
+}
+
+function getRainVol() {
+  if (geofs.camera.currentModeName != "cockpit") {
+    geofs.animation.values.rainVol = 0;
+    return;
+  }
+  if (weather.definition.precipitationAmount != 0 && weather.definition.precipitationType === "rain") {
+    if (geofs.animation.values.altitudeMeters <= weather.definition.ceiling) {
+      geofs.animation.values.rainVol = (clamp(weather.definition.precipitationAmount, 0, 10) * geofs.animation.values.kias / 2)/1000
+    }
+    else {
+      geofs.animation.values.rainVol = 0;
+    }
+  }
+  else {
+    geofs.animation.values.rainVol = 0;
+  }
+}
 //find direction from camera in degrees. 0 should be directly behind, 90 is to the left of the plane, 180 is in front, and 270 is to the right.
 
 function radians(n) {
@@ -294,6 +407,69 @@ geofs.aircraft.instance.definition.sounds[33].effects = {
 		"value": "cabinAmb"
 	}
 };
+
+geofs.aircraft.instance.definition.sounds[34] = {};
+geofs.aircraft.instance.definition.sounds[34].id = "touchH";
+geofs.aircraft.instance.definition.sounds[34].file = "https://138772948-227015667470610340.preview.editmysite.com/uploads/1/3/8/7/138772948/hardtouch.mp3";
+geofs.aircraft.instance.definition.sounds[34].effects = {
+	"start": {
+		"value": "tdHard"
+	},
+  "volume": {
+    "ratio": 0.1
+  }
+};
+
+geofs.aircraft.instance.definition.sounds[35] = {};
+geofs.aircraft.instance.definition.sounds[35].id = "touchS";
+geofs.aircraft.instance.definition.sounds[35].file = "https://138772948-227015667470610340.preview.editmysite.com/uploads/1/3/8/7/138772948/softtouch.mp3";
+geofs.aircraft.instance.definition.sounds[35].effects = {
+	"start": {
+		"value": "tdSoft"
+	},
+  "volume": {
+    "value": "tdSoft",
+    "ratio": 1
+  }
+};
+
+geofs.aircraft.instance.definition.sounds[36] = {};
+geofs.aircraft.instance.definition.sounds[36].id = "overspeed";
+geofs.aircraft.instance.definition.sounds[36].file = "https://138772948-227015667470610340.preview.editmysite.com/uploads/1/3/8/7/138772948/sounds_overspeed.mp3";
+geofs.aircraft.instance.definition.sounds[36].effects = {
+	"start": {
+		"value": "overspeed"
+	}
+};
+
+geofs.aircraft.instance.definition.sounds[37] = {};
+geofs.aircraft.instance.definition.sounds[37].id = "gearThud";
+geofs.aircraft.instance.definition.sounds[37].file = "https://138772948-227015667470610340.preview.editmysite.com/uploads/1/3/8/7/138772948/wheelthud.mp3";
+geofs.aircraft.instance.definition.sounds[37].effects = {
+	"start": {
+		"value": "gearThud"
+	}
+};
+
+geofs.aircraft.instance.definition.sounds[38] = {};
+geofs.aircraft.instance.definition.sounds[38].id = "rain";
+geofs.aircraft.instance.definition.sounds[38].file = "https://138772948-227015667470610340.preview.editmysite.com/uploads/1/3/8/7/138772948/sounds_rain.mp3";
+geofs.aircraft.instance.definition.sounds[38].effects = {
+	"volume": {
+		"value": "rainVol",
+    "ratio": 1
+	}
+};
+
+geofs.aircraft.instance.definition.sounds[39] = {};
+geofs.aircraft.instance.definition.sounds[39].id = "groundwind";
+geofs.aircraft.instance.definition.sounds[39].file = "https://138772948-227015667470610340.preview.editmysite.com/uploads/1/3/8/7/138772948/groundeffect.mp3";
+geofs.aircraft.instance.definition.sounds[39].effects = {
+	"volume": {
+		"value": "groundSound",
+    "ratio": 1
+	}
+};
 audio.init(geofs.aircraft.instance.definition.sounds)
 geofs.aircraft.instance.definition.sounds[0].effects.volume.ratio = 100
 geofs.aircraft.instance.definition.sounds[0].effects.volume.ramp = [100, 500, 2000, 10000]
@@ -308,6 +484,7 @@ geofs.aircraft.instance.definition.sounds[8].effects.volume.ratio = 100
   geofs.aircraft.instance.definition.sounds[29].effects.volume.ratio = 100
   geofs.aircraft.instance.definition.sounds[30].effects.volume.ratio = 100
   geofs.aircraft.instance.definition.sounds[31].effects.volume.ratio = 750
+  geofs.aircraft.instance.definition.sounds[34].effects.volume.ratio = 1
 }
 assignSounds()
 
@@ -490,6 +667,12 @@ soundInt = setInterval(function(){
   doRadioAltCall();
   checkReverse();
   checkCabin();
+  doShake();
+  getGroundSound();
+  getGearThud();
+  overspeed();
+  getRainVol();
+  getTouch();
 })
 
 
