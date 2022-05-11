@@ -170,8 +170,8 @@ function getPaxCheer() {
 //add g force effect to wingflex 
 
 function resetLift(){
-geofs.animation.values.liftLeftWing = (-geofs.aircraft.instance.parts.leftwing.lift / 50000)+((geofs.animation.values.accZ - 9)/50 + geofs.animation.values.shake / 30) / (geofs.animation.values.kias / 150);
-geofs.animation.values.liftRightWing = (-geofs.aircraft.instance.parts.rightwing.lift / 50000)+((geofs.animation.values.accZ - 9)/50 + geofs.animation.values.shake / 30) / (geofs.animation.values.kias / 150);
+geofs.animation.values.liftLeftWing = (-geofs.aircraft.instance.parts.leftwing.lift / 50000)+((geofs.animation.values.accZ - 9)/50 + geofs.animation.values.shake / 1000) / (geofs.animation.values.kias / 150);
+geofs.animation.values.liftRightWing = (-geofs.aircraft.instance.parts.rightwing.lift / 50000)+((geofs.animation.values.accZ - 9)/50 + geofs.animation.values.shake / 1000) / (geofs.animation.values.kias / 150);
 };
 
 let lastWingPosL = 0;
@@ -794,7 +794,7 @@ geofs.aircraft.instance.definition.sounds[45].effects = {
   geofs.aircraft.instance.definition.sounds[46] = {};
 geofs.aircraft.instance.definition.sounds[46].id = "rpfar";
 geofs.aircraft.instance.definition.sounds[46].file = "https://138772948-227015667470610340.preview.editmysite.com/uploads/1/3/8/7/138772948/engfar.mp3";
-geofs.aircraft.instance.definition.sounds[46].effects = {"volume": {"value": "engSoundFar", "ramp": [1000, 2500, 10000, 10000]}}
+geofs.aircraft.instance.definition.sounds[46].effects = {"volume": {"value": "engSoundFar", "ramp": [0, 2000, 10000, 10000]}}
 audio.init(geofs.aircraft.instance.definition.sounds)
 geofs.aircraft.instance.definition.sounds[0].effects.volume.ratio = 100
 geofs.aircraft.instance.definition.sounds[0].effects.volume.ramp = [100, 500, 2000, 10000]
