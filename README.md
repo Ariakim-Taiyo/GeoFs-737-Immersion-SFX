@@ -20,7 +20,7 @@ Passengers Screaming; *Suggested by user BlloketHackerX, If you go into a nosedi
 Flaps Lever Clicking; *When you adjust the flaps, the lever makes a distinctive click sound*<br>
 Trim Wheel Noise; *The trim wheel makes a sound when you adjust the trim*<br>
 Flaps Extending/Retracting Sound; *The flaps make a faint whirr when moved.*<br>
-
+Dynamic Wingflex; *The wingflex has been completely rewritten to add ground bounce when you go over a bump, and accurate inertial physics to make them actually boing.*<br>
 
 
 **Terms:**<br>
