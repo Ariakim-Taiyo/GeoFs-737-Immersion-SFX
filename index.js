@@ -1,5 +1,122 @@
 // Copyright 2022 Ariakim Taiyo
 
+
+
+//fix bug with reset
+geofs.flyTo = function(a, b) {
+  clearInterval(soundInt)
+  clearInterval(accelInt);
+  setTimeout(function(){
+    accelInt = setInterval(function(){
+      getAccel()
+    },10)
+
+    soundInt = setInterval(function(){
+      getFinalSoundVolumes();
+      //groundEffect();
+      getGearFlapsWarn();
+      testForApproach();
+      testTerrainorAppr();
+      doRadioAltCall();
+      checkReverse();
+      checkCabin();
+      doShake();
+      getGroundSound();
+      getGearThud();
+      overspeed();
+      getRainVol();
+      getTouch();
+      getTrimSound();
+      getFlapsSound();
+      getFlapsClick();
+      resetLift();
+      applyInertia();
+      getPaxCheer();
+      getScream();
+    })
+  }, 2000)
+  lastWingPosL = 0;
+  lastWingPosR = 0;
+  accelerationL = 1;
+  accelerationR = 1;
+  geofs.animation.values.volumeCabin = null;
+  geofs.animation.values.engSoundMultF = null;
+  geofs.animation.values.engSoundMultR = null;
+  geofs.animation.values.engSoundFar = null;
+  geofs.animation.values.reverseThrustVol = null;
+  geofs.animation.values.cabinAmb = null;
+  geofs.animation.values.groundSound = null;
+  geofs.animation.values.gearThud = null;
+  geofs.animation.values.overspeed = null;
+  geofs.animation.values.rainVol = null;
+  geofs.animation.values.tdSoft = null;
+  geofs.animation.values.tdHard = null;
+  geofs.animation.values.spoilersSound = null;
+  geofs.animation.values.shake = null;
+  geofs.animation.values.flapsClick = null;
+  geofs.animation.values.flapsSound = null;
+  geofs.animation.values.trimSound = null;
+  geofs.animation.values.liftLeftWing = 1;
+  geofs.animation.values.liftRightWing = 1;
+  geofs.animation.values.defL = 1;
+  geofs.animation.values.defR = 1;
+  geofs.animation.values.paxScream = 0;
+  geofs.animation.values.paxClap = 0;
+    if (a) {
+        geofs.doPause(1);
+        var c = geofs.aircraft.instance;
+        a[0] = a[0] || geofs.initialRunways[0][0];
+        a[1] = a[1] || geofs.initialRunways[0][1];
+        a[2] = a[2] || 0;
+        a[3] = a[3] || 0;
+        c.absoluteStartAltitude = a[4] ? !0 : !1;
+        c.startAltitude = a[2];
+        geofs.lastFlightCoordinates = a;
+        var d = a[0]
+          , e = a[1]
+          , f = a[2]
+          , g = [0, 0, 0];
+        g[0] = a[3];
+        var k = 0 == f;
+        c.llaLocation = [d, e, f];
+        b ? geofs.camera.set(geofs.camera.currentMode) : (geofs.probeTerrain(),
+        geofs.camera.reset(),
+        controls.reset(),
+        weather.reset(),
+        weather.refresh());
+        geofs.api.waterDetection.reset();
+        c.reset(k);
+        flight.reset();
+        objects.updateVisibility();
+        objects.updateCollidables();
+        geofs.runways.refresh();
+        geofs.runwaysLights.updateAll();
+        ui.hideCrashNotification();
+        geofs.api.getGuarantiedGroundAltitude([d, e, 0]).then(function(m) {
+            m = m[0].height || 0;
+            geofs.groundElevation = m;
+            k ? (c.startAltitude = geofs.groundElevation + c.definition.startAltitude,
+            c.absoluteStartAltitude = !1) : c.absoluteStartAltitude || (c.startAltitude += geofs.groundElevation);
+            c.llaLocation[2] = c.startAltitude;
+            flight.elevationAtPreviousLocation = m;
+            k ? (g[1] = c.definition.startTilt || 0,
+            c.startOnGround = !0,
+            c.groundContact = !0,
+            c.place(c.llaLocation, g),
+            c.object3d.compute(c.llaLocation),
+            c.render()) : (c.startOnGround = !1,
+            c.place(c.llaLocation, g),
+            c.object3d.compute(c.llaLocation),
+            m = c.definition.minimumSpeed / 1.94 * c.definition.mass,
+            c.rigidBody.applyCentralImpulse(V3.scale(c.object3d.getWorldFrame()[1], m)));
+            geofs.undoPause(1);
+            geofs.camera.setToNeutral();
+            geofs.camera.update(2);
+            flight.recorder.clear();
+            $(document).trigger("flyto")
+        })
+    }
+};
 //define new variables
 geofs.animation.values.volumeCabin = null;
 geofs.animation.values.engSoundMultF = null;
@@ -15,6 +132,128 @@ geofs.animation.values.tdSoft = null;
 geofs.animation.values.tdHard = null;
 geofs.animation.values.spoilersSound = null;
 geofs.animation.values.shake = null;
+geofs.animation.values.flapsClick = null;
+geofs.animation.values.flapsSound = null;
+geofs.animation.values.trimSound = null;
+geofs.animation.values.liftLeftWing = 1;
+geofs.animation.values.liftRightWing = 1;
+geofs.animation.values.defL = 1;
+geofs.animation.values.defR = 1;
+geofs.animation.values.paxScream = 0;
+geofs.animation.values.paxClap = 0;
+
+//get clap/scream fx
+
+function getScream() {
+  if (geofs.camera.currentModeName == "cockpit" || geofs.camera.currentModeName == "Left wing" || geofs.camera.currentModeName == "Right wing") {
+    if (geofs.animation.values.climbrate <= -6000 && geofs.animation.values.kias > 300) {
+      geofs.animation.values.paxScream = 1;
+    }
+    else {
+      geofs.animation.values.paxScream = 0;
+    }
+  }
+  else {
+    geofs.animation.values.paxScream = 0;
+  }
+}
+
+function getPaxCheer() {
+  if (weather.definition.turbulences <= 0.8) {
+    geofs.animation.values.paxClap = 0;
+  }
+};
+
+
+//add g force effect to wingflex 
+
+function resetLift(){
+geofs.animation.values.liftLeftWing = (-geofs.aircraft.instance.parts.leftwing.lift / 50000)+((geofs.animation.values.accZ - 9)/50 + geofs.animation.values.shake / 500000) / (geofs.animation.values.kias / 100);
+geofs.animation.values.liftRightWing = (-geofs.aircraft.instance.parts.rightwing.lift / 50000)+((geofs.animation.values.accZ - 9)/50 + geofs.animation.values.shake / 500000) / (geofs.animation.values.kias / 100);
+};
+
+let lastWingPosL = 0;
+let lastWingPosR = 0;
+let accelerationL = 1;
+let accelerationR = 1;
+    
+function getAccel() {
+  lastWingPosL = geofs.animation.values.liftLeftWing;
+  lastWingPosR = geofs.animation.values.liftLeftWing;
+  setTimeout(function(){
+    accelerationL = 10 *(geofs.animation.values.liftLeftWing - lastWingPosL) / geofs.animation.values.defL + 1;
+    accelerationR = 10 *(geofs.animation.values.liftRightWing - lastWingPosR) / geofs.animation.values.defR + 1;
+  }, 10)
+}
+
+accelInt = setInterval(function(){
+  getAccel()
+},10)
+
+function applyInertia() {
+  geofs.animation.values.defL = ((accelerationL) * lastWingPosL) * -100000;
+  geofs.animation.values.defR = ((accelerationR) * lastWingPosR) * -100000;
+}
+
+
+geofs.aircraft.instance.setup.parts[2].animations[0].function = "{return geofs.animation.values.defL}"
+geofs.aircraft.instance.setup.parts[3].animations[0].function = "{return geofs.animation.values.defL}"
+geofs.aircraft.instance.setup.parts[4].animations[0].function = "{return geofs.animation.values.defL}"
+
+geofs.aircraft.instance.setup.parts[25].animations[0].function = "{return geofs.animation.values.defR}"
+geofs.aircraft.instance.setup.parts[26].animations[0].function = "{return geofs.animation.values.defR}"
+geofs.aircraft.instance.setup.parts[27].animations[0].function = "{return geofs.animation.values.defR}"
+
+let lastFlapPos = 0;
+let lastFlapTarg = 0;
+
+function getFlapsSound() {
+  if (geofs.camera.currentModeName == "Left wing" || geofs.camera.currentModeName == "Right wing") {
+    if (geofs.animation.values.flapsPosition != lastFlapPos) {
+      geofs.animation.values.flapsSound = 1;
+    }
+    else {
+      geofs.animation.values.flapsSound = 0;
+    }
+  }
+  else {
+    geofs.animation.values.flapsSound = 0;
+  }
+  lastFlapPos = geofs.animation.values.flapsPosition;
+}
+
+
+function getFlapsClick() {
+  if (geofs.camera.currentModeName == "cockpit") {
+    if (lastFlapTarg != geofs.animation.values.flapsTarget) {
+      geofs.animation.values.flapsClick = 1;
+      setTimeout(function() {
+        geofs.animation.values.flapsClick = 0;
+      }, 200)
+    }
+  }
+  else {
+    geofs.animation.values.flapsClick = 0;
+  }
+  lastFlapTarg = geofs.animation.values.flapsTarget
+}
+
+let lastTrim = 0;
+
+function getTrimSound() {
+  if (geofs.camera.currentModeName == "cockpit") {
+    if (lastTrim != geofs.animation.values.trim) {
+      geofs.animation.values.trimSound = 1;
+    }
+    else {
+      geofs.animation.values.trimSound = 0;      
+    }
+  }
+  else {
+    geofs.animation.values.trimSound = 0;
+  }
+  lastTrim = geofs.animation.values.trim
+}
 
 //ground effect sound sensing
 
@@ -85,6 +324,12 @@ function getTouch() {
       }, 1000)
     }
     else {
+      if (geofs.animation.values.climbrate >= -1000) {
+        geofs.animation.values.paxClap = 1;
+        setTimeout(function(){
+          geofs.animation.values.paxClap = 0;
+        }, 5000)
+      }
       geofs.animation.values.tdSoft = 1;
       geofs.animation.values.tdHard = 0;
       setTimeout(function(){
@@ -470,6 +715,51 @@ geofs.aircraft.instance.definition.sounds[39].effects = {
     "ratio": 1
 	}
 };
+
+geofs.aircraft.instance.definition.sounds[40] = {};
+geofs.aircraft.instance.definition.sounds[40].id = "flapsClick";
+geofs.aircraft.instance.definition.sounds[40].file = "https://138772948-227015667470610340.preview.editmysite.com/uploads/1/3/8/7/138772948/flapslever.mp3";
+geofs.aircraft.instance.definition.sounds[40].effects = {
+	"start": {
+		"value": "flapsClick"
+	}
+};
+
+geofs.aircraft.instance.definition.sounds[41] = {};
+geofs.aircraft.instance.definition.sounds[41].id = "flapsSound";
+geofs.aircraft.instance.definition.sounds[41].file = "https://138772948-227015667470610340.preview.editmysite.com/uploads/1/3/8/7/138772948/737flaps.mp3";
+geofs.aircraft.instance.definition.sounds[41].effects = {
+	"start": {
+		"value": "flapsSound"
+	}
+};
+
+geofs.aircraft.instance.definition.sounds[42] = {};
+geofs.aircraft.instance.definition.sounds[42].id = "trim";
+geofs.aircraft.instance.definition.sounds[42].file = "https://138772948-227015667470610340.preview.editmysite.com/uploads/1/3/8/7/138772948/sounds_trim.mp3";
+geofs.aircraft.instance.definition.sounds[42].effects = {
+	"start": {
+		"value": "trimSound"
+	}
+};
+
+geofs.aircraft.instance.definition.sounds[43] = {};
+geofs.aircraft.instance.definition.sounds[43].id = "clap";
+geofs.aircraft.instance.definition.sounds[43].file = "https://138772948-227015667470610340.preview.editmysite.com/uploads/1/3/8/7/138772948/paxclap.mp3";
+geofs.aircraft.instance.definition.sounds[43].effects = {
+	"start": {
+		"value": "paxClap"
+	}
+};
+
+geofs.aircraft.instance.definition.sounds[44] = {};
+geofs.aircraft.instance.definition.sounds[44].id = "scream";
+geofs.aircraft.instance.definition.sounds[44].file = "https://138772948-227015667470610340.preview.editmysite.com/uploads/1/3/8/7/138772948/paxscream.mp3";
+geofs.aircraft.instance.definition.sounds[44].effects = {
+	"start": {
+		"value": "paxScream"
+	}
+};
 audio.init(geofs.aircraft.instance.definition.sounds)
 geofs.aircraft.instance.definition.sounds[0].effects.volume.ratio = 100
 geofs.aircraft.instance.definition.sounds[0].effects.volume.ramp = [100, 500, 2000, 10000]
@@ -673,6 +963,13 @@ soundInt = setInterval(function(){
   overspeed();
   getRainVol();
   getTouch();
+  getTrimSound();
+  getFlapsSound();
+  getFlapsClick();
+  resetLift();
+  applyInertia();
+  getPaxCheer();
+  getScream();
 })
 
 
