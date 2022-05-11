@@ -1,6 +1,6 @@
 # GeoFs-737-Immersion-SFX
 
-Release Version 1.0
+Release Version 1.1
 
 Adds 33 new high quality sounds to the 737-700. Every default sound has been completely rewritten!<br>
 **Current Features:**<br>
