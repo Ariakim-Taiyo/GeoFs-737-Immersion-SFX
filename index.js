@@ -33,6 +33,7 @@ geofs.flyTo = function(a, b) {
       applyInertia();
       getPaxCheer();
       getScream();
+      getFrontTouch();
     })
   }, 2000)
   lastWingPosL = 0;
@@ -141,6 +142,7 @@ geofs.animation.values.defL = 1;
 geofs.animation.values.defR = 1;
 geofs.animation.values.paxScream = 0;
 geofs.animation.values.paxClap = 0;
+geofs.animation.values.tdFront = 0;
 
 //get clap/scream fx
 
@@ -168,8 +170,8 @@ function getPaxCheer() {
 //add g force effect to wingflex 
 
 function resetLift(){
-geofs.animation.values.liftLeftWing = (-geofs.aircraft.instance.parts.leftwing.lift / 50000)+((geofs.animation.values.accZ - 9)/50 + geofs.animation.values.shake / 500000) / (geofs.animation.values.kias / 100);
-geofs.animation.values.liftRightWing = (-geofs.aircraft.instance.parts.rightwing.lift / 50000)+((geofs.animation.values.accZ - 9)/50 + geofs.animation.values.shake / 500000) / (geofs.animation.values.kias / 100);
+geofs.animation.values.liftLeftWing = (-geofs.aircraft.instance.parts.leftwing.lift / 50000)+((geofs.animation.values.accZ - 9)/50 + geofs.animation.values.shake / 30) / (geofs.animation.values.kias / 150);
+geofs.animation.values.liftRightWing = (-geofs.aircraft.instance.parts.rightwing.lift / 50000)+((geofs.animation.values.accZ - 9)/50 + geofs.animation.values.shake / 30) / (geofs.animation.values.kias / 150);
 };
 
 let lastWingPosL = 0;
@@ -313,9 +315,11 @@ function overspeed() {
 }
 
 let lastGC = 0;
+let lastGCF = 0;
+let noseDown = 0;
 
 function getTouch() {
-  if (lastGC != geofs.animation.values.groundContact) {
+  if (lastGC != geofs.animation.values.groundContact && geofs.animation.values.groundContact != 0) {
     if (Math.abs(geofs.animation.values.climbrate) >= 1000) {
       geofs.animation.values.tdSoft = 0;
       geofs.animation.values.tdHard = 1;
@@ -338,6 +342,24 @@ function getTouch() {
     }
   }
   lastGC = geofs.animation.values.groundContact;
+};
+
+
+function getFrontTouch() {
+  if (geofs.animation.values.nose_suspensionSuspension > 0) {
+    noseDown = 1;
+  }
+  else {
+    noseDown = 0;
+  }
+
+  if (lastGCF != noseDown && noseDown != 0) {
+    geofs.animation.values.tdFront = 1;
+    setTimeout(function(){
+      geofs.animation.values.tdFront = 0;
+    }, 150)
+  }
+  lastGCF = noseDown;
 };
 
 function doShake() {
@@ -429,11 +451,11 @@ function camDist() {
 };
 
 function findVolumes() {
-  var scalar = 20;
-  var d = camDist();
-  var v = scalar * Math.sqrt(d) - (d/4);
+  var scalar = 100;
+  var d = camDist() * 2;
+  var v = -0.005 * (((d * 10) - 100) * ((d * 10) - 100)) + 100;
   var v1 = (scalar * -d) + 1000;
-  return [clamp(v1/100, 0, 100), clamp(v/100, 0, 100)];
+  return [clamp(v1/100, 0, 100), clamp(v*10, 0, 10000)];
 };
 
 //mix all sound functions
@@ -760,6 +782,19 @@ geofs.aircraft.instance.definition.sounds[44].effects = {
 		"value": "paxScream"
 	}
 };
+
+geofs.aircraft.instance.definition.sounds[45] = {};
+geofs.aircraft.instance.definition.sounds[45].id = "frontgearthump";
+geofs.aircraft.instance.definition.sounds[45].file = "https://138772948-227015667470610340.preview.editmysite.com/uploads/1/3/8/7/138772948/nosethump.mp3";
+geofs.aircraft.instance.definition.sounds[45].effects = {
+	"start": {
+		"value": "tdFront"
+	}
+};
+  geofs.aircraft.instance.definition.sounds[46] = {};
+geofs.aircraft.instance.definition.sounds[46].id = "rpfar";
+geofs.aircraft.instance.definition.sounds[46].file = "https://138772948-227015667470610340.preview.editmysite.com/uploads/1/3/8/7/138772948/engfar.mp3";
+geofs.aircraft.instance.definition.sounds[46].effects = {"volume": {"value": "engSoundFar", "ramp": [1000, 2500, 10000, 10000]}}
 audio.init(geofs.aircraft.instance.definition.sounds)
 geofs.aircraft.instance.definition.sounds[0].effects.volume.ratio = 100
 geofs.aircraft.instance.definition.sounds[0].effects.volume.ramp = [100, 500, 2000, 10000]
@@ -770,6 +805,7 @@ geofs.aircraft.instance.definition.sounds[3].effects.volume.ramp = [0, 50, 1000,
 geofs.aircraft.instance.definition.sounds[3].effects.volume.ratio = 1
 geofs.aircraft.instance.definition.sounds[7].effects.volume.ratio = 100
 geofs.aircraft.instance.definition.sounds[8].effects.volume.ratio = 100
+geofs.aircraft.instance.definition.sounds[46].effects.volume.ratio = 100
   geofs.aircraft.instance.definition.sounds[28].effects.volume.ratio = 100
   geofs.aircraft.instance.definition.sounds[29].effects.volume.ratio = 100
   geofs.aircraft.instance.definition.sounds[30].effects.volume.ratio = 100
@@ -970,6 +1006,7 @@ soundInt = setInterval(function(){
   applyInertia();
   getPaxCheer();
   getScream();
+  getFrontTouch();
 })
 
 
