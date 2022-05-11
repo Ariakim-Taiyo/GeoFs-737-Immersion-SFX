@@ -1,8 +1,8 @@
 # GeoFs-737-Immersion-SFX
 
-Release Version 1.1
+Release Version 1.2
 
-Adds 33 new high quality sounds to the 737-700. Every default sound has been completely rewritten!<br>
+Adds 44 new high quality sounds to the 737-700. Every default sound has been completely rewritten!<br>
 **Current Features:**<br>
 Authentic Engine Recordings; *The famous 737 "buzzsaw" sound is now modelled in GeoFs!*<br>
 Directional Audio; *The soundset changes depending on the location of the camera and distance. Watch out for the backblast!*<br>
@@ -15,7 +15,11 @@ Ground effect sounds; *When you get close to the ground, you will hear a whooshi
 Dynamic Touchdown sounds; *Ryanair pilots better prepare their ears, because hard landings wont sound quite the same as soft ones.*<br>
 Stall Shaking/Buffeting; *A camera effect that shakes the camera in the cockpit when you are at high aoa.*<br>
 Rain Sounds; *Hear the rain dynamically respond to parameters such as speed and precipitation rate!*<br>
-
+Passengers Clapping; *If you make an acceptable landing when in bad weather, the passengers will clap for you!*<br>
+Passengers Screaming; *Suggested by user BlloketHackerX, If you go into a nosedive or put the plane in a perilous situation, the passengers will react accordingly.*<br>
+Flaps Lever Clicking; *When you adjust the flaps, the lever makes a distinctive click sound*<br>
+Trim Wheel Noise; *The trim wheel makes a sound when you adjust the trim*<br>
+Flaps Extending/Retracting Sound; *The flaps make a faint whirr when moved.*<br>
 
 
 
