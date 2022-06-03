@@ -302,7 +302,7 @@ function getShake() {
 
 function overspeed() {
   if (geofs.camera.currentModeName == "cockpit") {
-  if (geofs.animation.values.kias >= 300) {
+  if (geofs.animation.values.kias >= 450) {
     geofs.animation.values.overspeed = 1;
   }
   else {
