@@ -691,7 +691,7 @@ geofs.aircraft.instance.definition.sounds[33].effects = {
 
 geofs.aircraft.instance.definition.sounds[34] = {};
 geofs.aircraft.instance.definition.sounds[34].id = "touchH";
-geofs.aircraft.instance.definition.sounds[34].file = "https://138772948-227015667470610340.preview.editmysite.com/uploads/1/3/8/7/138772948/hardtouch.ogg";
+geofs.aircraft.instance.definition.sounds[34].file = "https://138772948-227015667470610340.preview.editmysite.com/uploads/1/3/8/7/138772948/hardtouch1.mp3";
 geofs.aircraft.instance.definition.sounds[34].effects = {
 	"start": {
 		"value": "tdHard"
@@ -703,7 +703,7 @@ geofs.aircraft.instance.definition.sounds[34].effects = {
 
 geofs.aircraft.instance.definition.sounds[35] = {};
 geofs.aircraft.instance.definition.sounds[35].id = "touchS";
-geofs.aircraft.instance.definition.sounds[35].file = "https://138772948-227015667470610340.preview.editmysite.com/uploads/1/3/8/7/138772948/softtouch.ogg";
+geofs.aircraft.instance.definition.sounds[35].file = "https://138772948-227015667470610340.preview.editmysite.com/uploads/1/3/8/7/138772948/softtouch1.mp3";
 geofs.aircraft.instance.definition.sounds[35].effects = {
 	"start": {
 		"value": "tdSoft"
@@ -744,7 +744,7 @@ geofs.aircraft.instance.definition.sounds[38].effects = {
 
 geofs.aircraft.instance.definition.sounds[39] = {};
 geofs.aircraft.instance.definition.sounds[39].id = "groundwind";
-geofs.aircraft.instance.definition.sounds[39].file = "https://138772948-227015667470610340.preview.editmysite.com/uploads/1/3/8/7/138772948/groundeffect.ogg";
+geofs.aircraft.instance.definition.sounds[39].file = "https://138772948-227015667470610340.preview.editmysite.com/uploads/1/3/8/7/138772948/groundeffect1.mp3";
 geofs.aircraft.instance.definition.sounds[39].effects = {
 	"volume": {
 		"value": "groundSound",
@@ -781,7 +781,7 @@ geofs.aircraft.instance.definition.sounds[42].effects = {
 
 geofs.aircraft.instance.definition.sounds[43] = {};
 geofs.aircraft.instance.definition.sounds[43].id = "clap";
-geofs.aircraft.instance.definition.sounds[43].file = "https://138772948-227015667470610340.preview.editmysite.com/uploads/1/3/8/7/138772948/paxclap.ogg";
+geofs.aircraft.instance.definition.sounds[43].file = "https://138772948-227015667470610340.preview.editmysite.com/uploads/1/3/8/7/138772948/paxclap1.mp3";
 geofs.aircraft.instance.definition.sounds[43].effects = {
 	"start": {
 		"value": "paxClap"
@@ -809,22 +809,30 @@ geofs.aircraft.instance.definition.sounds[45].effects = {
 geofs.aircraft.instance.definition.sounds[46].id = "rpfar";
 geofs.aircraft.instance.definition.sounds[46].file = "https://138772948-227015667470610340.preview.editmysite.com/uploads/1/3/8/7/138772948/engfar.mp3";
 geofs.aircraft.instance.definition.sounds[46].effects = {"volume": {"value": "engSoundFar", "ramp": [0, 2000, 10000, 10000]}}
+	
+    geofs.aircraft.instance.definition.sounds[47] = {};
+geofs.aircraft.instance.definition.sounds[47].id = "spool";
+geofs.aircraft.instance.definition.sounds[47].file = "https://138772948-227015667470610340.preview.editmysite.com/uploads/1/3/8/7/138772948/spoolcab.mp3";
+geofs.aircraft.instance.definition.sounds[47].effects = {"volume": {"value": "volumeCabin", "ramp": [1500, 6000, 7000, 8000]}, "pitch": {"value": "rpm", "ramp": [3500, 10000, 20000, 20000], "ratio": 1, "offset": 1}};	
+	
 audio.init(geofs.aircraft.instance.definition.sounds)
 geofs.aircraft.instance.definition.sounds[0].effects.volume.ratio = 100
 geofs.aircraft.instance.definition.sounds[0].effects.volume.ramp = [100, 500, 2000, 10000]
 geofs.aircraft.instance.definition.sounds[1].effects.volume.ratio = 100
 geofs.aircraft.instance.definition.sounds[2].effects.volume.ratio = 100
 geofs.aircraft.instance.definition.sounds[3].effects.volume.ramp = [0, 50, 1000, 1000]
-  geofs.aircraft.instance.definition.sounds[3].effects.volume.ratio = 100
+geofs.aircraft.instance.definition.sounds[3].effects.volume.ratio = 100
 geofs.aircraft.instance.definition.sounds[3].effects.volume.ratio = 1
 geofs.aircraft.instance.definition.sounds[7].effects.volume.ratio = 100
 geofs.aircraft.instance.definition.sounds[8].effects.volume.ratio = 100
 geofs.aircraft.instance.definition.sounds[46].effects.volume.ratio = 100
-  geofs.aircraft.instance.definition.sounds[28].effects.volume.ratio = 100
-  geofs.aircraft.instance.definition.sounds[29].effects.volume.ratio = 100
-  geofs.aircraft.instance.definition.sounds[30].effects.volume.ratio = 100
-  geofs.aircraft.instance.definition.sounds[31].effects.volume.ratio = 750
-  geofs.aircraft.instance.definition.sounds[34].effects.volume.ratio = 1
+geofs.aircraft.instance.definition.sounds[28].effects.volume.ratio = 100
+geofs.aircraft.instance.definition.sounds[29].effects.volume.ratio = 100
+geofs.aircraft.instance.definition.sounds[30].effects.volume.ratio = 350
+geofs.aircraft.instance.definition.sounds[31].effects.volume.ratio = 750
+geofs.aircraft.instance.definition.sounds[34].effects.volume.ratio = 1
+geofs.aircraft.instance.definition.sounds[39].effects.volume.ratio = 100
+geofs.aircraft.instance.definition.sounds[47].effects.volume.ratio = 90
 }
 assignSounds()
 
