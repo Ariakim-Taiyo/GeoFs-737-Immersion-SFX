@@ -1,5 +1,17 @@
 // Copyright 2022 Ariakim Taiyo
 
+let k = 125;
+let dc = -1.5;
+let m = 0.6;
+let vl = 0;
+let vr = 0;
+let dsl = 0;
+let dsr = 0;
+let restingpoint = 0;
+let dml = 0;
+let dmr = 0;
+let rrate = 1/240;
+let frameD = rrate * 1000;
 
 
 //fix bug with reset
@@ -75,11 +87,11 @@ geofs.flyTo = function(a, b) {
         geofs.lastFlightCoordinates = a;
         var d = a[0]
           , e = a[1]
-          , f = a[2]
-          , g = [0, 0, 0];
-        g[0] = a[3];
-        var k = 0 == f;
-        c.llaLocation = [d, e, f];
+          , g = a[2]
+          , f = [0, 0, 0];
+        f[0] = a[3];
+        var k = 0 == g;
+        c.llaLocation = [d, e, g];
         b ? geofs.camera.set(geofs.camera.currentMode) : (geofs.probeTerrain(),
         geofs.camera.reset(),
         controls.reset(),
@@ -87,26 +99,26 @@ geofs.flyTo = function(a, b) {
         weather.refresh());
         geofs.api.waterDetection.reset();
         c.reset(k);
-        flight.reset();
-        objects.updateVisibility();
-        objects.updateCollidables();
+        instruments.reset();
+        geofs.objects.update(c.llaLocation);
         geofs.runways.refresh();
         geofs.runwaysLights.updateAll();
         ui.hideCrashNotification();
         geofs.api.getGuarantiedGroundAltitude([d, e, 0]).then(function(m) {
             m = m[0].height || 0;
             geofs.groundElevation = m;
+            flight.reset(geofs.groundElevation);
             k ? (c.startAltitude = geofs.groundElevation + c.definition.startAltitude,
             c.absoluteStartAltitude = !1) : c.absoluteStartAltitude || (c.startAltitude += geofs.groundElevation);
             c.llaLocation[2] = c.startAltitude;
             flight.elevationAtPreviousLocation = m;
-            k ? (g[1] = c.definition.startTilt || 0,
+            k ? (f[1] = c.definition.startTilt || 0,
             c.startOnGround = !0,
             c.groundContact = !0,
-            c.place(c.llaLocation, g),
+            c.place(c.llaLocation, f),
             c.object3d.compute(c.llaLocation),
             c.render()) : (c.startOnGround = !1,
-            c.place(c.llaLocation, g),
+            c.place(c.llaLocation, f),
             c.object3d.compute(c.llaLocation),
             m = c.definition.minimumSpeed / 1.94 * c.definition.mass,
             c.rigidBody.applyCentralImpulse(V3.scale(c.object3d.getWorldFrame()[1], m)));
@@ -197,7 +209,7 @@ function applyInertia() {
   geofs.animation.values.defR = ((accelerationR) * lastWingPosR) * -100000;
 }
 
-
+/*
 geofs.aircraft.instance.setup.parts[2].animations[0].function = "{return geofs.animation.values.defL}"
 geofs.aircraft.instance.setup.parts[3].animations[0].function = "{return geofs.animation.values.defL}"
 geofs.aircraft.instance.setup.parts[4].animations[0].function = "{return geofs.animation.values.defL}"
@@ -205,6 +217,8 @@ geofs.aircraft.instance.setup.parts[4].animations[0].function = "{return geofs.a
 geofs.aircraft.instance.setup.parts[25].animations[0].function = "{return geofs.animation.values.defR}"
 geofs.aircraft.instance.setup.parts[26].animations[0].function = "{return geofs.animation.values.defR}"
 geofs.aircraft.instance.setup.parts[27].animations[0].function = "{return geofs.animation.values.defR}"
+*/
+
 
 let lastFlapPos = 0;
 let lastFlapTarg = 0;
@@ -353,7 +367,7 @@ function getFrontTouch() {
     noseDown = 0;
   }
 
-  if (lastGCF != noseDown && noseDown != 0) {
+  if (lastGCF != noseDown && noseDown != 0 && geofs.camera.currentModeName === "cockpit") {
     geofs.animation.values.tdFront = 1;
     setTimeout(function(){
       geofs.animation.values.tdFront = 0;
@@ -504,13 +518,13 @@ function checkCabin() {
 
 //assign new sounds
 function assignSounds() {
-geofs.aircraft.instance.definition.sounds[0].file = "https://138772948-227015667470610340.preview.editmysite.com/uploads/1/3/8/7/138772948/737englowfront.mp3"
+geofs.aircraft.instance.definition.sounds[0].file = "https://138772948-227015667470610340.preview.editmysite.com/uploads/1/3/8/7/138772948/englowfront.ogg"
 geofs.aircraft.instance.definition.sounds[0].effects.volume.value = "engSoundMultF";
 geofs.aircraft.instance.definition.sounds[0].effects.pitch.value = "rpm";
-geofs.aircraft.instance.definition.sounds[1].file = "https://138772948-227015667470610340.preview.editmysite.com/uploads/1/3/8/7/138772948/737engmidfront.mp3"
+geofs.aircraft.instance.definition.sounds[1].file = "https://138772948-227015667470610340.preview.editmysite.com/uploads/1/3/8/7/138772948/engmidfront.ogg"
 geofs.aircraft.instance.definition.sounds[1].effects.volume.value = "engSoundMultF";
 geofs.aircraft.instance.definition.sounds[1].effects.pitch.value = "rpm";
-geofs.aircraft.instance.definition.sounds[2].file = "https://138772948-227015667470610340.preview.editmysite.com/uploads/1/3/8/7/138772948/737enghighestfront.mp3"
+geofs.aircraft.instance.definition.sounds[2].file = "https://138772948-227015667470610340.preview.editmysite.com/uploads/1/3/8/7/138772948/enghighestfront.ogg"
 geofs.aircraft.instance.definition.sounds[2].effects.volume.value = "engSoundMultF";
 geofs.aircraft.instance.definition.sounds[2].effects.pitch.value = "rpm";
 geofs.aircraft.instance.definition.sounds[3].file = "https://138772948-227015667470610340.preview.editmysite.com/uploads/1/3/8/7/138772948/737rolling.mp3"
@@ -518,12 +532,12 @@ geofs.aircraft.instance.definition.sounds[3].file = "https://138772948-227015667
 
 geofs.aircraft.instance.definition.sounds[7] = {};
     geofs.aircraft.instance.definition.sounds[7].id = "rpmback";
-geofs.aircraft.instance.definition.sounds[7].file = "https://138772948-227015667470610340.preview.editmysite.com/uploads/1/3/8/7/138772948/737enghighback.mp3"
+geofs.aircraft.instance.definition.sounds[7].file = "https://138772948-227015667470610340.preview.editmysite.com/uploads/1/3/8/7/138772948/enghighback.ogg"
 geofs.aircraft.instance.definition.sounds[7].effects = {"volume": {"value": "engSoundMultR", "ramp": [6000, 10000, 20000, 50000]},"pitch": {"value": "rpm", "ramp": [1000, 20000, 20000, 20000], "ratio": 1, "offset": 1}}
 
 geofs.aircraft.instance.definition.sounds[8] = {};
   geofs.aircraft.instance.definition.sounds[8].id = "rpmback1";
-geofs.aircraft.instance.definition.sounds[8].file = "https://138772948-227015667470610340.preview.editmysite.com/uploads/1/3/8/7/138772948/737enghighback.mp3"
+geofs.aircraft.instance.definition.sounds[8].file = "https://138772948-227015667470610340.preview.editmysite.com/uploads/1/3/8/7/138772948/enghighback.ogg"
 geofs.aircraft.instance.definition.sounds[8].effects = {"volume": {"value": "engSoundMultR", "ramp": [100, 500, 2000, 10000]},"pitch": {"value": "rpm", "ramp": [1000, 20000, 20000, 20000], "ratio": 1, "offset": 1}}
 
 
@@ -640,17 +654,17 @@ geofs.aircraft.instance.definition.sounds[27].effects = {
 
   geofs.aircraft.instance.definition.sounds[28] = {};
 geofs.aircraft.instance.definition.sounds[28].id = "rpmin1";
-geofs.aircraft.instance.definition.sounds[28].file = "https://138772948-227015667470610340.preview.editmysite.com/uploads/1/3/8/7/138772948/737lowcab.mp3";
+geofs.aircraft.instance.definition.sounds[28].file = "https://138772948-227015667470610340.preview.editmysite.com/uploads/1/3/8/7/138772948/lowcab.ogg";
 geofs.aircraft.instance.definition.sounds[28].effects = {"volume": {"value": "volumeCabin", "ramp": [800, 950, 2500, 3500]},"pitch": {"value": "rpm", "ramp": [0, 20000, 20000, 20000], "ratio": 1, "offset": 1}}
 
   geofs.aircraft.instance.definition.sounds[29] = {};
 geofs.aircraft.instance.definition.sounds[29].id = "rpmin2";
-geofs.aircraft.instance.definition.sounds[29].file = "https://138772948-227015667470610340.preview.editmysite.com/uploads/1/3/8/7/138772948/737engmidcab.mp3";
+geofs.aircraft.instance.definition.sounds[29].file = "https://138772948-227015667470610340.preview.editmysite.com/uploads/1/3/8/7/138772948/midcab.ogg";
 geofs.aircraft.instance.definition.sounds[29].effects = {"volume": {"value": "volumeCabin", "ramp": [1000, 2500, 10000, 10000]},"pitch": {"value": "rpm", "ramp": [0, 20000, 20000, 20000], "ratio": 1, "offset": 1}}
 
     geofs.aircraft.instance.definition.sounds[30] = {};
 geofs.aircraft.instance.definition.sounds[30].id = "buzzsaw";
-geofs.aircraft.instance.definition.sounds[30].file = "https://138772948-227015667470610340.preview.editmysite.com/uploads/1/3/8/7/138772948/737enghighestcab.mp3";
+geofs.aircraft.instance.definition.sounds[30].file = "https://138772948-227015667470610340.preview.editmysite.com/uploads/1/3/8/7/138772948/buzzsawcab.ogg";
 geofs.aircraft.instance.definition.sounds[30].effects = {"volume": {"value": "volumeCabin", "ramp": [3000, 10000, 20000, 20000]}};
 
   geofs.aircraft.instance.definition.sounds[31] = {};
@@ -677,7 +691,7 @@ geofs.aircraft.instance.definition.sounds[33].effects = {
 
 geofs.aircraft.instance.definition.sounds[34] = {};
 geofs.aircraft.instance.definition.sounds[34].id = "touchH";
-geofs.aircraft.instance.definition.sounds[34].file = "https://138772948-227015667470610340.preview.editmysite.com/uploads/1/3/8/7/138772948/hardtouch.mp3";
+geofs.aircraft.instance.definition.sounds[34].file = "https://138772948-227015667470610340.preview.editmysite.com/uploads/1/3/8/7/138772948/hardtouch.ogg";
 geofs.aircraft.instance.definition.sounds[34].effects = {
 	"start": {
 		"value": "tdHard"
@@ -689,7 +703,7 @@ geofs.aircraft.instance.definition.sounds[34].effects = {
 
 geofs.aircraft.instance.definition.sounds[35] = {};
 geofs.aircraft.instance.definition.sounds[35].id = "touchS";
-geofs.aircraft.instance.definition.sounds[35].file = "https://138772948-227015667470610340.preview.editmysite.com/uploads/1/3/8/7/138772948/softtouch.mp3";
+geofs.aircraft.instance.definition.sounds[35].file = "https://138772948-227015667470610340.preview.editmysite.com/uploads/1/3/8/7/138772948/softtouch.ogg";
 geofs.aircraft.instance.definition.sounds[35].effects = {
 	"start": {
 		"value": "tdSoft"
@@ -730,7 +744,7 @@ geofs.aircraft.instance.definition.sounds[38].effects = {
 
 geofs.aircraft.instance.definition.sounds[39] = {};
 geofs.aircraft.instance.definition.sounds[39].id = "groundwind";
-geofs.aircraft.instance.definition.sounds[39].file = "https://138772948-227015667470610340.preview.editmysite.com/uploads/1/3/8/7/138772948/groundeffect.mp3";
+geofs.aircraft.instance.definition.sounds[39].file = "https://138772948-227015667470610340.preview.editmysite.com/uploads/1/3/8/7/138772948/groundeffect.ogg";
 geofs.aircraft.instance.definition.sounds[39].effects = {
 	"volume": {
 		"value": "groundSound",
@@ -767,7 +781,7 @@ geofs.aircraft.instance.definition.sounds[42].effects = {
 
 geofs.aircraft.instance.definition.sounds[43] = {};
 geofs.aircraft.instance.definition.sounds[43].id = "clap";
-geofs.aircraft.instance.definition.sounds[43].file = "https://138772948-227015667470610340.preview.editmysite.com/uploads/1/3/8/7/138772948/paxclap.mp3";
+geofs.aircraft.instance.definition.sounds[43].file = "https://138772948-227015667470610340.preview.editmysite.com/uploads/1/3/8/7/138772948/paxclap.ogg";
 geofs.aircraft.instance.definition.sounds[43].effects = {
 	"start": {
 		"value": "paxClap"
@@ -785,7 +799,7 @@ geofs.aircraft.instance.definition.sounds[44].effects = {
 
 geofs.aircraft.instance.definition.sounds[45] = {};
 geofs.aircraft.instance.definition.sounds[45].id = "frontgearthump";
-geofs.aircraft.instance.definition.sounds[45].file = "https://138772948-227015667470610340.preview.editmysite.com/uploads/1/3/8/7/138772948/nosethump.mp3";
+geofs.aircraft.instance.definition.sounds[45].file = "https://138772948-227015667470610340.preview.editmysite.com/uploads/1/3/8/7/138772948/nosetouch.ogg";
 geofs.aircraft.instance.definition.sounds[45].effects = {
 	"start": {
 		"value": "tdFront"
@@ -1059,3 +1073,41 @@ tcasIntervalAnnounce = setInterval(function() {
   doTrafficCheck();
   }
 }, 200)
+
+
+
+geofs.animation.values.flexl = 0;
+geofs.animation.values.flexr = 0;
+
+function getds() {
+  dsl = geofs.animation.values.flexl + geofs.aircraft.instance.parts['leftwing'].lift + (geofs.animation.values.accZ - 9.8) * 30;
+  dsr = geofs.animation.values.flexr + geofs.aircraft.instance.parts['rightwing'].lift + (geofs.animation.values.accZ - 9.8) * 30;
+}
+
+function spring() {
+  getds();
+  var ldsl = dsl;
+  var ldsr = dsr;
+  var fl = -k * dsl;
+  var fr = -k * dsr;
+  dml = dc * vl;
+  dmr = dc * vr;
+  var al = (fl + dml) / m;
+  var ar = (fr + dmr) / m;
+  vl += al * rrate;
+  vr += ar * rrate;
+  geofs.animation.values.flexl += vl * rrate;
+  geofs.animation.values.flexr += vr * rrate;
+}
+
+geofs.aircraft.instance.setup.parts[2].animations[0].function = "{return -geofs.animation.values.flexl}"
+geofs.aircraft.instance.setup.parts[3].animations[0].function = "{return -geofs.animation.values.flexl}"
+geofs.aircraft.instance.setup.parts[4].animations[0].function = "{return -geofs.animation.values.flexl}"
+
+geofs.aircraft.instance.setup.parts[25].animations[0].function = "{return -geofs.animation.values.flexr}"
+geofs.aircraft.instance.setup.parts[26].animations[0].function = "{return -geofs.animation.values.flexr}"
+geofs.aircraft.instance.setup.parts[27].animations[0].function = "{return -geofs.animation.values.flexr}"
+
+flexInterval = setInterval(function(){
+  spring();
+}, frameD)
