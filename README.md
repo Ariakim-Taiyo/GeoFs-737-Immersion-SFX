@@ -1,8 +1,11 @@
 # GeoFs-737-Immersion-SFX
 
-Release Version 1.2
+Release Version 1.4<br>
 
-Adds 44 new high quality sounds to the 737-700. Every default sound has been completely rewritten!<br>
+
+*September 2nd update: fixed 3.3 compatibility, rewrote wing spring simulation, new sound set (no more sound clipping issues.)*
+
+Adds 48 new high quality sounds to the 737-700. Every default sound has been completely rewritten!<br>
 
 
 **Current Features:**<br>
