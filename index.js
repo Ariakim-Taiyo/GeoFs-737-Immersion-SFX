@@ -1148,3 +1148,17 @@ geofs.aircraft.instance.setup.parts[27].animations[0].function = "{return -geofs
 flexInterval = setInterval(function(){
   spring();
 }, frameD)
+//yaw damper
+geofs.animation.values.rudderDamp = 0;
+
+function yawDamper() {
+  if (geofs.animation.values.haglFeet <= 200) {
+    geofs.animation.values.rudderDamp = geofs.animation.values.yaw;
+  } else {
+    var av = geofs.aircraft.instance.rigidBody.v_angularVelocity[2] * 30
+    geofs.animation.values.rudderDamp = geofs.animation.values.yaw - (av / (1 / geofs.animation.values.pitch * 40))
+  }
+}
+
+geofs.aircraft.instance.parts.rudder.animations[0].value = "rudderDamp";
+setInterval(function(){yawDamper();},10)
