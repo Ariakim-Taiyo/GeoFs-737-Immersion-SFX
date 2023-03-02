@@ -158,7 +158,7 @@ geofs.animation.values.paxScream = 0;
 geofs.animation.values.paxClap = 0;
 geofs.animation.values.tdFront = 0;
 geofs.animation.values.bump = 0;
-let bumpDist = 250;
+let bumpDist = 10;
 let bumpSC = 0;
 
 //get taxiway bumps
