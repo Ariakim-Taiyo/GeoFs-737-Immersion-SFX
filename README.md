@@ -29,13 +29,3 @@ Adds 48 new high quality sounds to the 737-700. Every default sound has been com
 **Trim Wheel Noise**; *The trim wheel makes a sound when you adjust the trim*<br>
 **Flaps Extending/Retracting Sound**; *The flaps make a faint whirr when moved.*<br>
 **Dynamic Wingflex**; *The wingflex has been completely rewritten to add ground bounce when you go over a bump, and accurate inertial physics to make them actually boing.*<br>
-
-
-**Terms:**<br>
-You are free to use, distribute, or modify the plugin without prior approval. You must, however, not earn profit from any distribution of the code. You may monetize videos that feature it, however, you must credit me (AriakimTaiyo) at the top of your video description with the following format;<br>
-
-This video features the plugin "GeoFs 737 Immersion" by AriakimTaiyo, available free at https://github.com/Ariakim-Taiyo/GeoFs-737-Immersion-SFX.<br>
-
-I am not responsible for any damage caused from tampering or improper use of the code. Modify it at your own risk. This code contains "commented" portions that are not fully ready for release, however I would like to share their existence in the code; I strongly advise against un-commenting those protions to prevent fatal errors.<br>
-
-By using this code you agree to these terms. 
