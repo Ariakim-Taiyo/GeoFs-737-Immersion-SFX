@@ -1,5 +1,3 @@
-// Copyright 2022 Ariakim Taiyo
-
 let k = 125;
 let dc = -1.5;
 let m = 0.6;
@@ -199,9 +197,7 @@ function getPaxCheer() {
   }
 };
 
-
 //add g force effect to wingflex 
-
 function resetLift(){
 geofs.animation.values.liftLeftWing = (-geofs.aircraft.instance.parts.leftwing.lift / 50000)+((geofs.animation.values.accZ - 9)/50 + geofs.animation.values.shake / 1000) / (geofs.animation.values.kias / 150);
 geofs.animation.values.liftRightWing = (-geofs.aircraft.instance.parts.rightwing.lift / 50000)+((geofs.animation.values.accZ - 9)/50 + geofs.animation.values.shake / 1000) / (geofs.animation.values.kias / 150);
@@ -423,8 +419,8 @@ function getRainVol() {
     geofs.animation.values.rainVol = 0;
   }
 }
-//find direction from camera in degrees. 0 should be directly behind, 90 is to the left of the plane, 180 is in front, and 270 is to the right.
 
+//find direction from camera in degrees. 0 should be directly behind, 90 is to the left of the plane, 180 is in front, and 270 is to the right.
 function radians(n) {
   return n * (Math.PI / 180);
 };
@@ -455,7 +451,6 @@ function getCameraDirection() {
 };
 
 //split camera into front and backblast sound cones, front and sides should sound the same, while the back should play a backblast sound.
-
 function checkPos() {
     var a = (getCameraDirection() - geofs.animation.values.heading360) % 360;
     var b = radians(a);
@@ -467,7 +462,6 @@ function checkPos() {
   };
 
 //get distance from aircraft
-
 function camDist() {
     var R = 6371 // km
     var lat1 = radians(geofs.api.getCameraLla(geofs.camera.cam)[0])
@@ -494,7 +488,6 @@ function findVolumes() {
 };
 
 //mix all sound functions
-
 function getFinalSoundVolumes() {
   if (geofs.camera.currentModeName != "cockpit" && geofs.camera.currentModeName != "Left wing" && geofs.camera.currentModeName != "Right wing") {
   var rpm = geofs.animation.values.rpm / 10
