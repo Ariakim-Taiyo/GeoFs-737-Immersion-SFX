@@ -16,7 +16,7 @@ let autopilotDisconnectSound = new Audio("https://raw.githubusercontent.com/Chir
 geofs.autopilot._turnOff = geofs.autopilot.turnOff // duplicate the original
 geofs.autopilot.turnOff = () => { // override the original function
   geofs.autopilot._turnOff();
-  autopilotDisconnectSound.play()
+  if (audio.on && !geofs.pause) autopilotDisconnectSound.play();
 }
 
 
