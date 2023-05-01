@@ -10,7 +10,7 @@ let dml = 0;
 let dmr = 0;
 let rrate = 1/240;
 let frameD = rrate * 1000;
-let autopilotDisconnectSound = new Audio("https://raw.githubusercontent.com/Chiroyce1/GeoFs-737-Immersion-SFX/main/737_autopilot_disconnect.mp3")
+let autopilotDisconnectSound = new Audio("https://raw.githubusercontent.com/Ariakim-Taiyo/GeoFs-737-Immersion-SFX/main/737_autopilot_disconnect.mp3")
 
 // autopliot disconnect sound
 geofs.autopilot._turnOff = geofs.autopilot.turnOff // duplicate the original
