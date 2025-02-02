@@ -1,0 +1,27 @@
+// ==UserScript==
+// @name         GeoFS 737 Immersion SFX
+// @namespace    http://tampermonkey.net/
+// @version      1.0
+// @description  737 Immersion SFX userscript version
+// @author       Writer by ChatGPT Edited by Indonesiaboy
+// @match        https://www.geo-fs.com/geofs.php?v=*
+// @match        https://*.geo-fs.com/geofs.php*
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=geo-fs.com
+// @grant        none
+// @run-at       document-end
+// ==/UserScript==
+
+(function() {
+    'use strict';
+
+    // Wait 10 second before run the script(if you directly run the script, there will no sound)
+    setTimeout(() => {
+        // Grab the script from GitHub and execute it
+        fetch('https://raw.githubusercontent.com/Ariakim-Taiyo/GeoFs-737-Immersion-SFX/main/index.js')
+            .then(response => response.text())
+            .then(script => {
+                const scriptElement = document.createElement('script');
+                scriptElement.textContent = script;
+                document.body.appendChild(scriptElement);
+            });
+    }, 10000); // 10000 ms = 10 second
